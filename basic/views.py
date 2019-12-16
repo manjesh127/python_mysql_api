@@ -66,3 +66,12 @@ def emplyLogin(request):
 
     else:
         return JsonResponse({'success':False,'message':'Invalid request'})
+
+def verifyLogin(request):
+    if request.method=="POST":
+        # print(request.headers)
+        return JsonResponse({'success':True,'message':'valid jwt'})
+
+    else:
+        return JsonResponse({'success':False,'message':'Invalid request'})
+   

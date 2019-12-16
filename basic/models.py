@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class employee(models.Model):
-    employee_id  = salary= models.IntegerField()
+    employee_id  = models.IntegerField()
     first_name   = models.CharField(max_length=200)
     last_name    = models.CharField(max_length=200)
     job_title    = models.CharField(max_length=200)

@@ -6,12 +6,5 @@ urlpatterns = [
     path('save_detail/',views.insertApi , name = 'api'),
     path('getApi/',views.getApi , name = 'register'),
     path('login/',views.emplyLogin , name = 'login'),
-    # path('contact/',views.contact , name = 'contact'),
-    # path('about/',views.about , name = 'about'),
-    # path('single/',views.single , name = 'single'),
-    # path('shop/',views.single , name = 'shop'),
-    # path('coming/',views.coming , name = 'coming'),
-    # path('register/registerapi',views.registerapi , name = 'registerapi'),
-    # path('login/loginapi',views.loginapi,name='loginapi')
-
+    path('verify/',views.verifyLogin , name = 'check'),
 ]
