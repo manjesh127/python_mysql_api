@@ -2,11 +2,15 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http import JsonResponse
 from django.core import serializers
+from django.conf import settings
 import json
 import ujson
+import requests
 from .models import employee
 import jwt
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 def hello(request):
@@ -51,7 +55,6 @@ def emplyLogin(request):
         getData = employee.objects.filter(first_name=first_name,last_name=last_name)
         tmpJson = serializers.serialize("json",getData)
         resp_json = json.loads(tmpJson)
-        
         for d in resp_json:
             del d['pk']
             del d['model']
@@ -59,18 +62,19 @@ def emplyLogin(request):
         if len(resp_json) ==0:
             return JsonResponse({'success':False,'message':'Invalid credentials'})
         else:
-            encoded_jwt = jwt.encode({'first_name':resp_json[0]["fields"]["first_name"] }, 'secret12345', algorithm='HS256')
-            # decoded_jwt = jwt.decode(encoded_jwt, 'secret12345', algorithms=['HS256'])
-            # print(decoded_jwt)
+            encoded_jwt = jwt.encode({'first_name':resp_json[0]["fields"]["first_name"],'last_name':resp_json[0]["fields"]["last_name"] }, settings.SECRET_KEY, algorithm='HS256')
+
             return JsonResponse({'success':True,'message':'success','token':ujson.loads(ujson.dumps(encoded_jwt))})
 
     else:
         return JsonResponse({'success':False,'message':'Invalid request'})
 
+
 def verifyLogin(request):
+    # print(request.META['HTTP_AUTHORIZATION'].split()[1])
     if request.method=="POST":
-        # print(request.headers)
-        return JsonResponse({'success':True,'message':'valid jwt'})
+        decoded = jwt.decode(request.META['HTTP_AUTHORIZATION'].split()[1],settings.SECRET_KEY , algorithms='HS256')
+        return JsonResponse({'success':True,'message':'valid jwt','name':decoded["first_name"]})
 
     else:
         return JsonResponse({'success':False,'message':'Invalid request'})
