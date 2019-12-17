@@ -73,7 +73,11 @@ def emplyLogin(request):
 def verifyLogin(request):
     # print(request.META['HTTP_AUTHORIZATION'].split()[1])
     if request.method=="POST":
-        decoded = jwt.decode(request.META['HTTP_AUTHORIZATION'].split()[1],settings.SECRET_KEY , algorithms='HS256')
+        try:
+            decoded = jwt.decode(request.META['HTTP_AUTHORIZATION'].split()[1],settings.SECRET_KEY , algorithms='HS256')
+        except :
+            return JsonResponse({'success':False,'message':'Invalid Token'})
+        
         return JsonResponse({'success':True,'message':'valid jwt','name':decoded["first_name"]})
 
     else:
